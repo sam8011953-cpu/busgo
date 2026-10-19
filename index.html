@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BusGo</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+  <link rel="icon" href="./icons/favicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+  <meta name="theme-color" content="#f97316" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BusGo" />
+</head>
+<body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splash" class="splash">
+    <div class="splash-content">
+      <img src="./icons/icon-512.png" alt="BusGo" class="splash-logo" />
+      <h1 class="splash-title">BusGo</h1>
+      <p class="splash-sub">Your Journey Starts Here</p>
+      <div class="splash-bar"><div class="splash-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- AUTH SCREEN -->
+  <div id="authScreen" class="screen hidden">
+    <div class="auth-bg">
+      <div class="blob blob1"></div>
+      <div class="blob blob2"></div>
+      <div class="blob blob3"></div>
+    </div>
+    <div class="auth-container">
+      <div class="auth-logo">
+        <img src="./icons/icon-512.png" alt="BusGo" />
+        <h1>BusGo</h1>
+        <p>Book smarter. Travel better.</p>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuth('login')">Login</button>
+        <button class="auth-tab" onclick="switchAuth('signup')">Sign Up</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="loginForm" class="auth-form">
+        <div class="input-group">
+          <span class="input-icon">📧</span>
+          <input type="email" id="loginEmail" placeholder="Email address" />
+        </div>
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="loginPassword" placeholder="Password" />
+          <span class="toggle-pw" onclick="togglePw('loginPassword')">👁️</span>
+        </div>
+        <button class="btn-primary" onclick="login()">Login</button>
+        <p class="auth-hint">Demo: use any email & password</p>
+      </div>
+
+      <!-- SIGNUP -->
+      <div id="signupForm" class="auth-form hidden">
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input type="text" id="signupName" placeholder="Full name" />
+        </div>
+        <div class="input-group">
+          <span class="input-icon">📧</span>
+          <input type="email" id="signupEmail" placeholder="Email address" />
+        </div>
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="signupPassword" placeholder="Password" oninput="checkStrength(this.value)" />
+          <span class="toggle-pw" onclick="togglePw('signupPassword')">👁️</span>
+        </div>
+        <div class="strength-bar">
+          <div id="strengthFill" class="strength-fill"></div>
+        </div>
+        <p id="strengthText" class="strength-text"></p>
+        <button class="btn-primary" onclick="signup()">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="mainApp" class="hidden">
+
+    <!-- HEADER -->
+    <div class="app-header">
+      <div class="header-left">
+        <img src="./icons/icon-192.png" alt="BusGo" class="header-logo" />
+        <span class="header-title">BusGo</span>
+      </div>
+      <div class="header-right">
+        <button class="dark-toggle" onclick="toggleDark()" id="darkBtn">🌙</button>
+        <div class="avatar" id="userAvatar" onclick="showTab('profile')">S</div>
+      </div>
+    </div>
+
+    <!-- SCREENS -->
+
+    <!-- SEARCH SCREEN -->
+    <div id="searchScreen" class="tab-screen active-screen">
+      <div class="hero-banner">
+        <div class="hero-text">
+          <p class="hero-greeting" id="heroGreeting">Good Morning 👋</p>
+          <h2 id="heroName">Sam</h2>
+          <p class="hero-sub">Where are you going today?</p>
+        </div>
+        <img src="./icons/icon-192.png" class="hero-img" alt="bus" />
+      </div>
+
+      <div class="search-card">
+        <h3 class="card-title">Search Buses</h3>
+        <div class="route-inputs">
+          <div class="input-group">
+            <span class="input-icon">🟢</span>
+            <select id="fromCity">
+              <option value="">From City</option>
+              <option>Chennai</option>
+              <option>Bangalore</option>
+              <option>Hyderabad</option>
+              <option>Mumbai</option>
+              <option>Delhi</option>
+              <option>Coimbatore</option>
+            </select>
+          </div>
+          <button class="swap-btn" onclick="swapCities()">⇅</button>
+          <div class="input-group">
+            <span class="input-icon">🔴</span>
+            <select id="toCity">
+              <option value="">To City</option>
+              <option>Chennai</option>
+              <option>Bangalore</option>
+              <option>Hyderabad</option>
+              <option>Mumbai</option>
+              <option>Delhi</option>
+              <option>Coimbatore</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-group">
+          <span class="input-icon">📅</span>
+          <input type="date" id="travelDate" />
+        </div>
+        <button class="btn-primary" onclick="searchBuses()">🔍 Search Buses</button>
+      </div>
+
+      <div class="popular-routes">
+        <h3 class="section-title">Popular Routes</h3>
+        <div class="route-chips">
+          <div class="chip" onclick="fillRoute('Chennai','Bangalore')">Chennai → Bangalore</div>
+          <div class="chip" onclick="fillRoute('Chennai','Hyderabad')">Chennai → Hyderabad</div>
+          <div class="chip" onclick="fillRoute('Bangalore','Mumbai')">Bangalore → Mumbai</div>
+          <div class="chip" onclick="fillRoute('Delhi','Mumbai')">Delhi → Mumbai</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUS LIST SCREEN -->
+    <div id="busListScreen" class="tab-screen hidden">
+      <div class="screen-header">
+        <button class="back-btn" onclick="goBack('searchScreen')">← Back</button>
+        <div>
+          <h3 id="routeTitle">Chennai → Bangalore</h3>
+          <p id="routeDate" class="route-date"></p>
+        </div>
+      </div>
+      <div id="busList" class="bus-list"></div>
+    </div>
+
+    <!-- SEAT SELECTION SCREEN -->
+    <div id="seatScreen" class="tab-screen hidden">
+      <div class="screen-header">
+        <button class="back-btn" onclick="goBack('busListScreen')">← Back</button>
+        <div>
+          <h3 id="seatBusName">Orange Travels</h3>
+          <p class="route-date">Select your seats</p>
+        </div>
+      </div>
+      <div class="seat-legend">
+        <div class="legend-item"><div class="seat-demo available"></div><span>Available</span></div>
+        <div class="legend-item"><div class="seat-demo booked"></div><span>Booked</span></div>
+        <div class="legend-item"><div class="seat-demo selected"></div><span>Selected</span></div>
+      </div>
+      <div id="seatMap" class="seat-map"></div>
+      <div class="seat-info">
+        <p>Selected: <span id="selectedSeatsText">None</span></p>
+        <p>Total: <span id="seatTotal">₹0</span></p>
+      </div>
+      <button class="btn-primary" onclick="goToPassenger()">Continue</button>
+    </div>
+
+    <!-- PASSENGER SCREEN -->
+    <div id="passengerScreen" class="tab-screen hidden">
+      <div class="screen-header">
+        <button class="back-btn" onclick="goBack('seatScreen')">← Back</button>
+        <h3>Passenger Details</h3>
+      </div>
+      <div id="passengerForms" class="passenger-forms"></div>
+      <button class="btn-primary" onclick="goToPayment()">Proceed to Payment</button>
+    </div>
+
+    <!-- PAYMENT SCREEN -->
+    <div id="paymentScreen" class="tab-screen hidden">
+      <div class="screen-header">
+        <button class="back-btn" onclick="goBack('passengerScreen')">← Back</button>
+        <h3>Payment</h3>
+      </div>
+      <div class="payment-summary card">
+        <h4>Booking Summary</h4>
+        <div class="summary-row"><span>Route</span><span id="payRoute"></span></div>
+        <div class="summary-row"><span>Date</span><span id="payDate"></span></div>
+        <div class="summary-row"><span>Bus</span><span id="payBus"></span></div>
+        <div class="summary-row"><span>Seats</span><span id="paySeats"></span></div>
+        <div class="summary-row total"><span>Total</span><span id="payTotal"></span></div>
+      </div>
+      <div class="payment-methods card">
+        <h4>Payment Method</h4>
+        <div class="pay-option active" id="payUPI" onclick="selectPay('UPI')">
+          <span>💳</span><div><strong>UPI</strong><p>Google Pay, PhonePe, Paytm</p></div>
+        </div>
+        <div class="pay-option" id="payCard" onclick="selectPay('Card')">
+          <span>🏦</span><div><strong>Credit / Debit Card</strong><p>Visa, Mastercard, Rupay</p></div>
+        </div>
+        <div id="upiSection">
+          <div class="input-group">
+            <span class="input-icon">📱</span>
+            <input type="text" id="upiId" placeholder="Enter UPI ID (e.g. sam@upi)" />
+          </div>
+        </div>
+        <div id="cardSection" class="hidden">
+          <div class="input-group">
+            <span class="input-icon">💳</span>
+            <input type="text" id="cardNum" placeholder="Card Number" maxlength="19" />
+          </div>
+          <div class="card-row">
+            <div class="input-group">
+              <span class="input-icon">📅</span>
+              <input type="text" id="cardExp" placeholder="MM/YY" maxlength="5" />
+            </div>
+            <div class="input-group">
+              <span class="input-icon">🔒</span>
+              <input type="text" id="cardCvv" placeholder="CVV" maxlength="3" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary btn-pay" onclick="processPayment()">💰 Pay Now</button>
+    </div>
+
+    <!-- TICKET SCREEN -->
+    <div id="ticketScreen" class="tab-screen hidden">
+      <div class="screen-header">
+        <h3>🎉 Booking Confirmed!</h3>
+      </div>
+      <div class="ticket-card">
+        <div class="ticket-header">
+          <img src="./icons/icon-192.png" alt="BusGo" class="ticket-logo" />
+          <div>
+            <h3>BusGo</h3>
+            <p id="ticketId" class="ticket-id"></p>
+          </div>
+        </div>
+        <div class="ticket-route">
+          <div class="ticket-city">
+            <h2 id="ticketFrom"></h2>
+            <p>Departure</p>
+          </div>
+          <div class="ticket-arrow">🚌</div>
+          <div class="ticket-city">
+            <h2 id="ticketTo"></h2>
+            <p>Arrival</p>
+          </div>
+        </div>
+        <div class="ticket-details">
+          <div class="ticket-detail"><p>Date</p><strong id="ticketDate"></strong></div>
+          <div class="ticket-detail"><p>Bus</p><strong id="ticketBus"></strong></div>
+          <div class="ticket-detail"><p>Seats</p><strong id="ticketSeats"></strong></div>
+          <div class="ticket-detail"><p>Amount</p><strong id="ticketAmount"></strong></div>
+        </div>
+        <div class="qr-section">
+          <canvas id="qrCanvas" width="150" height="150"></canvas>
+          <p>Scan at boarding</p>
+        </div>
+        <div class="ticket-status">✅ Confirmed</div>
+      </div>
+      <button class="btn-primary" onclick="showTab('bookings')">View My Bookings</button>
+      <button class="btn-outline" onclick="showTab('search')">Book Another</button>
+    </div>
+
+    <!-- BOOKINGS SCREEN -->
+    <div id="bookingsScreen" class="tab-screen hidden">
+      <div class="screen-header-plain">
+        <h3>My Bookings</h3>
+      </div>
+      <div id="bookingsList" class="bookings-list"></div>
+    </div>
+
+    <!-- PROFILE SCREEN -->
+    <div id="profileScreen" class="tab-screen hidden">
+      <div class="profile-hero">
+        <div class="profile-avatar" id="profileAvatar">S</div>
+        <h2 id="profileName">Sam</h2>
+        <p id="profileEmail">sam@email.com</p>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-box">
+          <h3 id="statTotal">0</h3>
+          <p>Trips</p>
+        </div>
+        <div class="stat-box">
+          <h3 id="statSpent">₹0</h3>
+          <p>Spent</p>
+        </div>
+        <div class="stat-box">
+          <h3 id="statCities">0</h3>
+          <p>Cities</p>
+        </div>
+      </div>
+      <div class="profile-menu">
+        <div class="menu-item" onclick="showTab('bookings')">
+          <span>🎫</span><span>My Bookings</span><span>›</span>
+        </div>
+        <div class="menu-item" onclick="toggleDark()">
+          <span>🌙</span><span>Dark Mode</span><span id="darkStatus">Off</span>
+        </div>
+        <div class="menu-item danger" onclick="logout()">
+          <span>🚪</span><span>Logout</span><span>›</span>
+        </div>
+      </div>
+      <p class="version-text">BusGo v1.0 — Made with ❤️</p>
+    </div>
+
+    <!-- BOTTOM TAB BAR -->
+    <div class="bottom-bar">
+      <button class="tab-btn active" id="tab-search" onclick="showTab('search')">
+        <span>🔍</span><span>Search</span>
+      </button>
+      <button class="tab-btn" id="tab-bookings" onclick="showTab('bookings')">
+        <span>🎫</span><span>Bookings</span>
+      </button>
+      <button class="tab-btn" id="tab-profile" onclick="showTab('profile')">
+        <span>👤</span><span>Profile</span>
+      </button>
+    </div>
+
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
